@@ -1,0 +1,26 @@
+conf_id: runner # unique identifier - string (digits and lowercase Latin letters)
+request:
+  url: http://example.com/users?date={CURRENT_DATE('%Y-%m-%d')}&prev_date={DATE_WITH_OFFSET('%Y-%m-%d)}
+  date_offset: # may be omitted
+    days: 1
+response: # configure processing of HTTP response
+  - id: users # unique identifier - string (digits and lowercase Latin letters)
+    path: users # path to entry containing data list
+    sql_table: users # name of SQL table to insert data
+    fields:
+      - origin: id
+        sql_field: user_id
+      - origin: name
+        sql_field: user_name
+      - origin: age
+        sql_field: user_age
+  - id: apps
+    path: users.applications # if dot is used, a `parent.child` node is assumed
+    sql_table: apps # name of SQL table to insert data
+    fields:
+      - origin: id
+        sql_field: app_id
+      - origin: date
+        sql_field: app_date
+      - origin: parent.id # if dot is used in `fields.origin` entry, one-level parent is assumed
+        sql_field: parent_id
